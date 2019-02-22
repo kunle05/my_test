@@ -27,7 +27,8 @@ def new_user(request):
             hash_pw = bcrypt.hashpw(request.POST['password'].encode(), bcrypt.gensalt())
 
             new_user = User.objects.create(first_name = request.POST['f_name'], last_name = request.POST['l_name'], email = request.POST['email'], password = hash_pw, birthdate = request.POST['dob'])
-
+            
+            request.session['user_id'] = new_user.id
             request.session['user_name'] = new_user.first_name
             messages.success(request, "Successfully registered !")
             return redirect("/wall")
