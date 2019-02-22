@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>User Wall</title>
+</head>
+<body class="container bg-dark">
+    {% load humanize %}
+    <div class="navbar navbar-expand-lg navbar-dark bg-secondary box-shadow text-white">
+        <div class="container d-flex">
+            <div container>
+                <h2 class="mb-0">The Gentlemen Wall</h2>
+                {% if messages %}
+                    {% for message in messages %}
+                    {% if "success" in message.tags %}
+                        <p class="text-success m-0">{{message}}</p>
+                    {% endif %}
+                    {% endfor %}
+                {% endif %} 
+            </div>
+            <h4 class="navbar-brand offset-5">Welcome {{request.session.user_name}}</h4>
+            <a class="" href="/logout">Log Out</a>    
+        </div>     
+    </div>
+    <div class="container col-12">
+        <div class="container mb-5 p-0">
+            <form action="/post_msg" method="post">
+                {% csrf_token %}
+                <div class=" jumbotron form-group mb-2 pt-2">
+                    <h4>Post a message</h4>
+                    <textarea class="form-control" name="text" id="post" rows="2"></textarea>
+                    <button type="submit" class="btn btn-primary float-right mt-2">Submit</button>
+                </div>
+            </form>
+        </div>
+        <div class="container col-12 bg-light rounded">
+            {% if messages %}
+                {% for message in messages %}
+                {% if "error" in message.tags %}
+                    <p class="text-danger m-0">{{message}}</p>
+                {% endif %}
+                {% endfor %}
+            {% endif %} 
+    
+            {% for msg in all_msg %}
+            <div class="container col-12 mt-5 border rounded">
+                <p class="font-weight-bold mb-0">{{msg.writer.first_name}} {{msg.writer.last_name}} {{msg.created_at|naturaltime}} <span class="text-muted font-weight-italic font-weight-normal">wrote</span></p>
+                <p class="ml-3 mt-2">{{msg.message}}</p>
+
+                <p class="font-weight-bold mb-0">Comments:</p>
+                {% for comment in all_comment %}
+                    {% if comment.post_id == msg.id %}
+                        <p class="font-italic text-warning mb-0">{{comment.users.first_name}} {{comment.users.last_name}} {{comment.users.created_at|naturaltime}}</p>
+                        <p class="ml-3">{{comment.comment}}</p>
+                    {% endif %}
+                {% endfor %}
+    
+                <form action="/comment/{{msg.id}}" method="post">
+                    {% csrf_token %}
+                    <div>
+                        <textarea class="form-control" name="comment" id="post" rows="1" placeholder="Leave a comment"></textarea>
+                        <a href="/destroy/{{msg.id}}">Delete</a>
+                        <button type="submit" class="btn btn-primary float-right mb-2 mt-1">Post</button>
+                    </div>
+                </form>        
+            </div>
+            {% endfor %} 
+        </div>      
+    </div>
+</body>
+</html>

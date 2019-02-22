@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'my_users/style.css' %} ">
+</head>
+<body>
+    <div class="navbar navbar-expand-lg navbar-dark bg-light  ">
+        <div>
+            <h1>Success! Welcome, {{request.session.user_name}} !</h1>
+            {% if messages %}
+                {% for message in messages %}
+                {% if "success" in message.tags %}
+                    <p class="text-success m-0">{{message}}</p>
+                {% endif %}
+                {% endfor %}
+            {% endif %} 
+        </div>
+        <a class="offset-7" href="/logout">Log Out</a>         
+    </div>
+    <P>Click here to go to your <a href="/wall">wall</a></P>     
+</body>
+</html>
